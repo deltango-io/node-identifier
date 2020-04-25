@@ -3,7 +3,7 @@ export interface IdentifierInstanceOptions {
   alphabet?: string;
   minLength?: number;
 }
-export class IdentifierInstance {
+export class Identifier {
   buffer: Buffer;
   alphabet: string;
   minLength: number;
@@ -27,7 +27,7 @@ export class IdentifierInstance {
     return this;
   }
 
-  toBuffer() {
+  public toBuffer() {
     return this.buffer;
   }
 
@@ -37,7 +37,7 @@ export class IdentifierInstance {
     return this;
   }
 
-  toHex() {
+  public toHex() {
     return this.buffer.toString('hex');
   }
 
@@ -60,9 +60,9 @@ export class IdentifierInstance {
     return this.fromBuffer(require('base-x')(alphabet || this.alphabet).decode(stringInput));
   }
 
-  toString(minLength?: number, alphabet?: string): string;
-  toString(alphabet?: string, minLength?: number): string;
-  toString(arg1?: string | number, arg2?: string | number): string {
+  public toString(minLength?: number, alphabet?: string): string;
+  public toString(alphabet?: string, minLength?: number): string;
+  public toString(arg1?: string | number, arg2?: string | number): string {
     const optMinimumLength: number = typeof arg1 === 'number' ? arg1 : typeof arg2 === 'number' ? arg2 : this.minLength;
     const optAlphabet: string = typeof arg1 === 'string' ? arg1 : typeof arg2 === 'string' ? arg2 : this.alphabet;
     return require('base-x')(optAlphabet).encode(this.buffer).padStart(optMinimumLength, optAlphabet[0]);
@@ -72,7 +72,7 @@ export class IdentifierInstance {
     return this.fromHex(numberInput.toString(16));
   }
 
-  toInt() {
+  public toInt() {
     return parseInt(this.toHex(), 16);
   }
 
@@ -80,7 +80,7 @@ export class IdentifierInstance {
     return this.fromHex(bigInt.toString(16));
   }
 
-  toBigInt() {
+  public toBigInt() {
     return BigInt('0x' + this.toHex());
   }
 
@@ -121,6 +121,30 @@ export class IdentifierInstance {
   }
 }
 
-export function Identifier(opts?: IdentifierInstanceOptions) {
-  return new IdentifierInstance(opts);
+export function identifier(opts?: IdentifierInstanceOptions): Identifier {
+  return new Identifier(opts);
+}
+
+export function getIdentifierFromString(str: string, opts?: IdentifierInstanceOptions): Identifier {
+  return identifier(opts).fromString(str)
+}
+
+export function getIdentifierFromHex(hex: string, opts?: IdentifierInstanceOptions): Identifier {
+  return identifier(opts).fromHex(hex);
+}
+
+export function getIdentifierFromUUID(uuid: string, opts?: IdentifierInstanceOptions): Identifier {
+  return identifier(opts).fromUUID(uuid);
+}
+
+export function generateIdentifierWithObjectId(opts?: IdentifierInstanceOptions): Identifier {
+  return identifier(opts).generateObjectId();
+}
+
+export function generateIdentifierWithUUID(version?: 1 | 4, opts?: IdentifierInstanceOptions): Identifier {
+  return identifier(opts).generateUUID(version);
+}
+
+export function generateIdentifierWithBigInt(opts?: IdentifierInstanceOptions): Identifier {
+  return identifier(opts).generateBigInt();
 }
