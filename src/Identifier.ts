@@ -187,6 +187,9 @@ export function getIdentifierFromString(str: string): Identifier {
 export function getIdentifierFromHex(hex: string): Identifier {
     return getIdentifier().fromHex(hex);
 }
+export function getIdentifierFromObject(hex: string): Identifier {
+    return getIdentifierFromHex(hex);
+}
 
 export function getIdentifierFromUniversallyUnique(uuid: string): Identifier {
     return getIdentifier().fromUniversallyUnique(uuid);
