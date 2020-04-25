@@ -94,8 +94,7 @@ export class Identifier {
 
     value += (time % 1000).toString(16).padStart(4, '0');
 
-    while (value.length < 24)
-      value += Math.round(Math.random() * 16).toString(16);
+    while (value.length < 24) value += Math.round(Math.random() * 16).toString(16);
 
     return this.fromHex(value);
   }
@@ -110,8 +109,7 @@ export class Identifier {
 
     value += (time % 1000).toString(16).padStart(4, '0');
 
-    while (value.length < 16)
-      value += Math.round(Math.random() * 16).toString(16);
+    while (value.length < 16) value += Math.round(Math.random() * 16).toString(16);
 
     return this.fromHex(value);
   }
