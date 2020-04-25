@@ -47,7 +47,7 @@ export class Identifier {
   fromHex(hex: string): this {
     if (hex.length % 2) hex = '0' + hex;
     this.buffer = Buffer.from(hex, 'hex');
-    return this;
+    return this.trimBuffer();
   }
 
   public toHex() {
