@@ -165,3 +165,21 @@ export function generateIdentifierWithUUID(version?: 1 | 4, opts?: IdentifierIns
 export function generateIdentifierWithBigInt(opts?: IdentifierInstanceOptions): Identifier {
   return getIdentifier(opts).generateBigInt();
 }
+
+export function generateIdentifierWithRandomString(length: number, opts?: IdentifierInstanceOptions) {
+  const identifier = getIdentifier(opts);
+  let generated: string = '';
+  while (generated.length < length) {
+    const length = identifier.alphabet.length;
+    const random = Math.random() * length;
+    const index = Math.round(random);
+    const value = identifier.alphabet[index] || '';
+    //console.log(identifier.alphabet, length, random, index, value);
+    generated += value;
+  }
+
+  //console.log('generated', generated);
+  //return identifier;
+  return identifier.fromString(generated);
+}
+
