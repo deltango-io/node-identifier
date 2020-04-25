@@ -3,17 +3,17 @@ export interface IdentifierInstanceOptions {
   alphabet?: string;
   minLength?: number;
 }
+export const ProfanitySafeBase60 = '0123456789ABCDEFGHIJKLMNOPQRSTVWXYZabcdefghijklmnopqrstvwxyz';
 export class Identifier {
   buffer: Buffer;
   alphabet: string;
   minLength: number;
 
-  constructor(opts?: IdentifierInstanceOptions) {
-    this.buffer = (opts ? opts.buffer : undefined) || Buffer.alloc(0);
-    this.alphabet =
-      (opts ? opts.alphabet : undefined) || '0123456789ABCDEFGHIJKLMNOPQRSTVWXYZabcdefghijklmnopqrstvwxyz';
-    this.minLength = (opts ? opts.minLength : undefined) || 0;
-  }
+    constructor(opts?: IdentifierInstanceOptions) {
+        this.buffer = (opts ? opts.buffer : undefined) || Buffer.alloc(0);
+        this.alphabet = (opts ? opts.alphabet : undefined) || ProfanitySafeBase60;
+        this.minLength = (opts ? opts.minLength : undefined) || 0;
+    }
 
     fromBuffer(buffer: Buffer): this {
         this.buffer = buffer;
