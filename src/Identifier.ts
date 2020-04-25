@@ -111,14 +111,14 @@ export class Identifier {
     }
 
     generateUniversallyUnique(processNumber?: number): this {
-        const process = processNumber ? processNumber.toString(16).padStart(6,'0') : this.getRandomHex(6);
+        const process = processNumber ? processNumber.toString(16).padStart(6, '0') : this.getRandomHex(6);
         const processHigh = process.substr(0, 3);
-        const processLow = process.substr(3,3);
+        const processLow = process.substr(3, 3);
         const version = 4;
         const seq = (8 + Math.round(Math.random() * 3)).toString(16);
         const time = this.getTimeAsHex();
         const random = this.getRandomHex(12);
-        return this.fromHex( time + version + processHigh + seq + processLow + random);
+        return this.fromHex(time + version + processHigh + seq + processLow + random);
     }
 
     generateRandomString(desiredLength: number) {
@@ -150,7 +150,9 @@ export class Identifier {
     }
 
     getRandomHex(desiredLength: number) {
-        return require('crypto').randomBytes(desiredLength / 2).toString('hex');
+        return require('crypto')
+            .randomBytes(desiredLength / 2)
+            .toString('hex');
     }
 
     getRandomAlphabetChar(allowZero: boolean = false) {
@@ -205,7 +207,7 @@ export function getIntegerIdentifierAsString(integer: number): string {
     return getIdentifier().fromInteger(integer).toString();
 }
 export function getStringIdentifierAsInteger(str: string): number {
-    return getIdentifier().fromString(str).toInteger()
+    return getIdentifier().fromString(str).toInteger();
 }
 
 // Hex <> Integer Helpers
@@ -213,7 +215,7 @@ export function getIntegerIdentifierAsHex(integer: number): string {
     return getIdentifier().fromInteger(integer).toHex();
 }
 export function getHexIdentifierAsInteger(hex: string): number {
-    return getIdentifier().fromHex(hex).toInteger()
+    return getIdentifier().fromHex(hex).toInteger();
 }
 
 // UUID <> String Helpers
