@@ -126,7 +126,7 @@ export function identifier(opts?: IdentifierInstanceOptions): Identifier {
 }
 
 export function getIdentifierFromString(str: string, opts?: IdentifierInstanceOptions): Identifier {
-  return identifier(opts).fromString(str)
+  return identifier(opts).fromString(str);
 }
 
 export function getIdentifierFromHex(hex: string, opts?: IdentifierInstanceOptions): Identifier {
