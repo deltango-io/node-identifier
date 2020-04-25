@@ -21,12 +21,10 @@ export class Identifier {
     }
 
     trimBuffer(): this {
-        if (this.buffer.length < 0 || this.buffer[0] !== 0x00)
-            return this;
+        if (this.buffer.length < 0 || this.buffer[0] !== 0x00) return this;
 
         for (let i: number = 0; i <= this.buffer.length; i++)
-            if (this.buffer[i] !== 0x00)
-                return this.fromBuffer(this.buffer.slice(i));
+            if (this.buffer[i] !== 0x00) return this.fromBuffer(this.buffer.slice(i));
 
         this.buffer = Buffer.alloc(0);
         return this;
@@ -91,7 +89,7 @@ export class Identifier {
     }
 
     generateObject(): this {
-       return this.generateHexWithTimestamp(24);
+        return this.generateHexWithTimestamp(24);
     }
 
     generateBigInt(includeMilliseconds: boolean = false) {
@@ -123,24 +121,22 @@ export class Identifier {
 
     generateRandomString(desiredLength: number) {
         let output: string = '';
-        if (desiredLength > 0)
-            output = this.getRandomAlphabetChar(false);
+        if (desiredLength > 0) output = this.getRandomAlphabetChar(false);
 
-        for (let i = 0; i < (desiredLength - 2); i++)
-            output += this.getRandomAlphabetChar();
+        for (let i = 0; i < desiredLength - 2; i++) output += this.getRandomAlphabetChar();
 
-        if (desiredLength > 1)
-            output += this.getRandomAlphabetChar(false);
+        if (desiredLength > 1) output += this.getRandomAlphabetChar(false);
 
         return this.fromString(output);
     }
 
     getTimeAsHex(includeMilliseconds: boolean = true) {
         const time = new Date().getTime();
-        const seconds = Math.floor(time / 1000).toString(16).padStart(8, '0');
+        const seconds = Math.floor(time / 1000)
+            .toString(16)
+            .padStart(8, '0');
 
-        if (!includeMilliseconds)
-            return seconds;
+        if (!includeMilliseconds) return seconds;
 
         const milliseconds = (time % 1000).toString(16).padStart(4, '0');
         return seconds + milliseconds;
@@ -153,21 +149,18 @@ export class Identifier {
 
     getRandomHex(desiredLength: number) {
         let output: string = '';
-        if (desiredLength > 0)
-            output = this.getRandomHexChar(false);
+        if (desiredLength > 0) output = this.getRandomHexChar(false);
 
-        for (let i = 0; i < (desiredLength - 2); i++)
-            output += this.getRandomHexChar();
+        for (let i = 0; i < desiredLength - 2; i++) output += this.getRandomHexChar();
 
-        if (desiredLength > 1)
-            output += this.getRandomHexChar(false);
+        if (desiredLength > 1) output += this.getRandomHexChar(false);
 
         return output;
     }
 
     getRandomAlphabetChar(allowZero: boolean = false) {
         const multiplier = this.alphabet.length - (allowZero ? 1 : 2);
-        const random: number = Math.round(Math.random() *  multiplier);
+        const random: number = Math.round(Math.random() * multiplier);
         return this.alphabet[allowZero ? random : random + 1];
     }
 }
@@ -195,10 +188,10 @@ export function generateObjectIdentifier(): Identifier {
     return getIdentifier().generateObject();
 }
 export function generateObjectIdentifierAsString(): string {
-    return generateObjectIdentifier().toString()
+    return generateObjectIdentifier().toString();
 }
 export function generateObjectIdentifierAsHex(): string {
-    return generateObjectIdentifier().toHex()
+    return generateObjectIdentifier().toHex();
 }
 
 export function generateUniversallyUniqueIdentifier(version?: 1 | 4, opts?: IdentifierInstanceOptions): Identifier {
