@@ -37,14 +37,12 @@
   "homepage": "https://github.com/lyndonbuckley/node-identifier#readme",
   "devDependencies": {
     "@types/node": "^13.13.2",
-    "@types/uuid": "^7.0.3",
     "prettier": "^2.0.5",
     "tslint": "^6.1.1",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.8.3"
   },
   "dependencies": {
-    "base-x": "^3.0.8",
-    "uuid": "^7.0.3"
+    "base-x": "^3.0.8"
   }
 }

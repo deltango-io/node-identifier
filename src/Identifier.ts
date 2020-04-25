@@ -72,11 +72,11 @@ export class Identifier {
         return require('base-x')(optAlphabet).encode(this.buffer).padStart(optMinimumLength, optAlphabet[0]);
     }
 
-    fromInt(numberInput: number): this {
+    fromInteger(numberInput: number): this {
         return this.fromHex(numberInput.toString(16));
     }
 
-    public toInt() {
+    public toInteger() {
         return parseInt(this.toHex(), 16);
     }
 
@@ -95,6 +95,7 @@ export class Identifier {
     generateBigInt(includeMilliseconds: boolean = false) {
         return this.generateHexWithTimestamp(16, false);
     }
+
     generateRandomBigInt() {
         return this.generateHex(16);
     }
@@ -109,14 +110,15 @@ export class Identifier {
         return this.fromHex(this.getRandomHex(length));
     }
 
-    generateUniversallyUnique(version?: 1 | 4): this {
-        switch (version) {
-            case 1:
-                return this.fromUniversallyUnique(require('uuid').v1());
-            case 4:
-            default:
-                return this.fromUniversallyUnique(require('uuid').v4());
-        }
+    generateUniversallyUnique(processNumber?: number): this {
+        const process = processNumber ? processNumber.toString(16).padStart(6,'0') : this.getRandomHex(6);
+        const processHigh = process.substr(0, 3);
+        const processLow = process.substr(3,3);
+        const version = 4;
+        const seq = (8 + Math.round(Math.random() * 3)).toString(16);
+        const time = this.getTimeAsHex();
+        const random = this.getRandomHex(12);
+        return this.fromHex( time + version + processHigh + seq + processLow + random);
     }
 
     generateRandomString(desiredLength: number) {
@@ -148,14 +150,7 @@ export class Identifier {
     }
 
     getRandomHex(desiredLength: number) {
-        let output: string = '';
-        if (desiredLength > 0) output = this.getRandomHexChar(false);
-
-        for (let i = 0; i < desiredLength - 2; i++) output += this.getRandomHexChar();
-
-        if (desiredLength > 1) output += this.getRandomHexChar(false);
-
-        return output;
+        return require('crypto').randomBytes(desiredLength / 2).toString('hex');
     }
 
     getRandomAlphabetChar(allowZero: boolean = false) {
@@ -169,39 +164,35 @@ export function getIdentifier(opts?: IdentifierInstanceOptions): Identifier {
     return new Identifier(opts);
 }
 
+// Instance Creation Helpers
+export function getIdentifierFromInteger(integer: number): Identifier {
+    return getIdentifier().fromInteger(integer);
+}
 export function getIdentifierFromString(str: string): Identifier {
     return getIdentifier().fromString(str);
 }
-
 export function getIdentifierFromHex(hex: string): Identifier {
     return getIdentifier().fromHex(hex);
 }
 export function getIdentifierFromObject(hex: string): Identifier {
     return getIdentifierFromHex(hex);
 }
-
 export function getIdentifierFromUniversallyUnique(uuid: string): Identifier {
     return getIdentifier().fromUniversallyUnique(uuid);
 }
 
+// Generation Helpers
 export function generateObjectIdentifier(): Identifier {
     return getIdentifier().generateObject();
 }
-export function generateObjectIdentifierAsString(): string {
-    return generateObjectIdentifier().toString();
+export function generateUniversallyUniqueIdentifier(): Identifier {
+    return getIdentifier().generateUniversallyUnique();
 }
-export function generateObjectIdentifierAsHex(): string {
-    return generateObjectIdentifier().toHex();
-}
-
-export function generateUniversallyUniqueIdentifier(version?: 1 | 4, opts?: IdentifierInstanceOptions): Identifier {
-    return getIdentifier(opts).generateUniversallyUnique(version);
+export function generateIdentifierWithBigInt(): Identifier {
+    return getIdentifier().generateBigInt();
 }
 
-export function generateIdentifierWithBigInt(opts?: IdentifierInstanceOptions): Identifier {
-    return getIdentifier(opts).generateBigInt();
-}
-
+// String <> Hex Helpers
 export function getHexIdentifierAsString(id: string) {
     return getIdentifier().fromHex(id).toString();
 }
@@ -209,6 +200,23 @@ export function getStringIdentifierAsHex(id: string) {
     return getIdentifier().fromString(id).toHex();
 }
 
+// String <> Integer Helpers
+export function getIntegerIdentifierAsString(integer: number): string {
+    return getIdentifier().fromInteger(integer).toString();
+}
+export function getStringIdentifierAsInteger(str: string): number {
+    return getIdentifier().fromString(str).toInteger()
+}
+
+// Hex <> Integer Helpers
+export function getIntegerIdentifierAsHex(integer: number): string {
+    return getIdentifier().fromInteger(integer).toHex();
+}
+export function getHexIdentifierAsInteger(hex: string): number {
+    return getIdentifier().fromHex(hex).toInteger()
+}
+
+// UUID <> String Helpers
 export function getUniversallyUniqueIdentifierAsString(id: string) {
     return getIdentifier().fromUniversallyUnique(id).toString();
 }
