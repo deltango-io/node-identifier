@@ -46,11 +46,11 @@ export class Identifier {
         return hex.padEnd(minLength || this.minLength, '0');
     }
 
-    fromUUID(uuid: string): this {
+    fromUniversallyUnique(uuid: string): this {
         return this.fromHex(uuid.replace(/-/g, ''));
     }
 
-    toUUID(): string {
+    toUniversallyUnique(): string {
         const hex = this.toHex().padEnd(32, '0');
         const sections: string[] = [];
         sections.push(hex.substr(0, 8));
@@ -90,32 +90,49 @@ export class Identifier {
         return BigInt('0x' + this.toHex());
     }
 
-    generateObjectId(): this {
+    generateObject(): this {
        return this.generateHexWithTimestamp(24);
     }
 
     generateBigInt(includeMilliseconds: boolean = false) {
         return this.generateHexWithTimestamp(16, false);
     }
+    generateRandomBigInt() {
+        return this.generateHex(16);
+    }
 
     generateHexWithTimestamp(length: number, includeMilliseconds: boolean = false) {
         const time = this.getTimeAsHex(includeMilliseconds);
-        const random = this.getRandomHexString(length - time.length);
+        const random = this.getRandomHex(length - time.length);
         return this.fromHex(time + random);
     }
 
     generateHex(length: number) {
-        return this.fromHex(this.getRandomHexString(length));
+        return this.fromHex(this.getRandomHex(length));
     }
 
-    generateUUID(version?: 1 | 4): this {
+    generateUniversallyUnique(version?: 1 | 4): this {
         switch (version) {
             case 1:
-                return this.fromUUID(require('uuid').v1());
+                return this.fromUniversallyUnique(require('uuid').v1());
             case 4:
             default:
-                return this.fromUUID(require('uuid').v4());
+                return this.fromUniversallyUnique(require('uuid').v4());
         }
+    }
+
+    generateRandomString(desiredLength: number) {
+        let output: string = '';
+        if (desiredLength > 0)
+            output = this.getRandomAlphabetChar(false);
+
+        for (let i = 0; i < (desiredLength - 2); i++)
+            output += this.getRandomAlphabetChar();
+
+        if (desiredLength > 1)
+            output += this.getRandomAlphabetChar(false);
+
+        return this.fromString(output);
     }
 
     getTimeAsHex(includeMilliseconds: boolean = true) {
@@ -129,25 +146,33 @@ export class Identifier {
         return seconds + milliseconds;
     }
 
-    getRandomHexCharacter(allowZero: boolean = true) {
+    getRandomHexChar(allowZero: boolean = true) {
         let random: number = Math.round(Math.random() * (allowZero ? 15 : 14));
         if (!allowZero)
             random++;
         return random.toString(16);
     }
 
-    getRandomHexString(desiredLength: number) {
+    getRandomHex(desiredLength: number) {
         let output: string = '';
         if (desiredLength > 0)
-            output = this.getRandomHexCharacter(false);
+            output = this.getRandomHexChar(false);
 
         for (let i = 0; i < (desiredLength - 2); i++)
-            output += this.getRandomHexCharacter();
+            output += this.getRandomHexChar();
 
         if (desiredLength > 1)
-            output += this.getRandomHexCharacter(false);
+            output += this.getRandomHexChar(false);
 
         return output;
+    }
+
+    getRandomAlphabetChar(allowZero: boolean = false) {
+        let multiplier = this.alphabet.length - (allowZero ? 1 : 2);
+        let random: number = Math.round(Math.random() *  multiplier);
+        if (!allowZero)
+            random++;
+        return this.alphabet[random];
     }
 }
 
@@ -155,37 +180,46 @@ export function getIdentifier(opts?: IdentifierInstanceOptions): Identifier {
     return new Identifier(opts);
 }
 
-export function getIdentifierFromString(str: string, opts?: IdentifierInstanceOptions): Identifier {
-    return getIdentifier(opts).fromString(str);
+export function getIdentifierFromString(str: string): Identifier {
+    return getIdentifier().fromString(str);
 }
 
-export function getIdentifierFromHex(hex: string, opts?: IdentifierInstanceOptions): Identifier {
-    return getIdentifier(opts).fromHex(hex);
+export function getIdentifierFromHex(hex: string): Identifier {
+    return getIdentifier().fromHex(hex);
 }
 
-export function getIdentifierFromUUID(uuid: string, opts?: IdentifierInstanceOptions): Identifier {
-    return getIdentifier(opts).fromUUID(uuid);
+export function getIdentifierFromUniversallyUnique(uuid: string): Identifier {
+    return getIdentifier().fromUniversallyUnique(uuid);
 }
 
-export function generateIdentifierWithObjectId(opts?: IdentifierInstanceOptions): Identifier {
-    return getIdentifier(opts).generateObjectId();
+export function generateObjectIdentifier(): Identifier {
+    return getIdentifier().generateObject();
+}
+export function generateObjectIdentifierAsString(): string {
+    return generateObjectIdentifier().toString()
+}
+export function generateObjectIdentifierAsHex(): string {
+    return generateObjectIdentifier().toHex()
 }
 
-export function generateIdentifierWithUUID(version?: 1 | 4, opts?: IdentifierInstanceOptions): Identifier {
-    return getIdentifier(opts).generateUUID(version);
+export function generateUniversallyUniqueIdentifier(version?: 1 | 4, opts?: IdentifierInstanceOptions): Identifier {
+    return getIdentifier(opts).generateUniversallyUnique(version);
 }
 
 export function generateIdentifierWithBigInt(opts?: IdentifierInstanceOptions): Identifier {
     return getIdentifier(opts).generateBigInt();
 }
 
-export function generateIdentifierWithRandomString(stringLength: number, opts?: IdentifierInstanceOptions) {
-    const identifier = getIdentifier(opts);
-    let generated: string = '';
-    while (stringLength > generated.length) {
-        const index = Math.round(Math.random() * identifier.alphabet.length);
-        generated += identifier.alphabet[index] || '';
-    }
+export function getHexIdentifierAsString(id: string) {
+    return getIdentifier().fromHex(id).toString();
+}
+export function getStringIdentifierAsHex(id: string) {
+    return getIdentifier().fromString(id).toHex();
+}
 
-    return identifier.fromString(generated);
+export function getUniversallyUniqueIdentifierAsString(id: string) {
+    return getIdentifier().fromUniversallyUnique(id).toString();
+}
+export function getStringIdentifierAsUniversallyUnique(id: string) {
+    return getIdentifier().fromString(id).toUniversallyUnique();
 }
