@@ -42,7 +42,7 @@ export class Identifier {
     }
 
     public toHex(minLength?: number) {
-        let hex = this.buffer.toString('hex');
+        const hex = this.buffer.toString('hex');
         return hex.padEnd(minLength || this.minLength, '0');
     }
 
@@ -147,10 +147,8 @@ export class Identifier {
     }
 
     getRandomHexChar(allowZero: boolean = true) {
-        let random: number = Math.round(Math.random() * (allowZero ? 15 : 14));
-        if (!allowZero)
-            random++;
-        return random.toString(16);
+        const random: number = Math.round(Math.random() * (allowZero ? 15 : 14));
+        return (allowZero ? random : random + 1).toString(16);
     }
 
     getRandomHex(desiredLength: number) {
@@ -168,11 +166,9 @@ export class Identifier {
     }
 
     getRandomAlphabetChar(allowZero: boolean = false) {
-        let multiplier = this.alphabet.length - (allowZero ? 1 : 2);
-        let random: number = Math.round(Math.random() *  multiplier);
-        if (!allowZero)
-            random++;
-        return this.alphabet[random];
+        const multiplier = this.alphabet.length - (allowZero ? 1 : 2);
+        const random: number = Math.round(Math.random() *  multiplier);
+        return this.alphabet[allowZero ? random : random + 1];
     }
 }
 
