@@ -60,8 +60,8 @@ export class IdentifierInstance {
     return this.fromBuffer(require('base-x')(alphabet || this.alphabet).decode(stringInput));
   }
 
-  toString(minLength: number, alphabet?: string): string;
-  toString(alphabet: string, minLength?: number): string;
+  toString(minLength?: number, alphabet?: string): string;
+  toString(alphabet?: string, minLength?: number): string;
   toString(arg1?: string | number, arg2?: string | number): string {
     const optMinimumLength: number = typeof arg1 === 'number' ? arg1 : typeof arg2 === 'number' ? arg2 : this.minLength;
     const optAlphabet: string = typeof arg1 === 'string' ? arg1 : typeof arg2 === 'string' ? arg2 : this.alphabet;
@@ -92,7 +92,7 @@ export class IdentifierInstance {
       .toString(16)
       .padStart(8, '0');
     value += (time % 1000).toString(16).padStart(4, '0');
-    while (value.length < 24) value += ((Math.random() * 16) || 0).toString(16);
+    while (value.length < 24) value += (Math.random() * 16 || 0).toString(16);
 
     return this.fromHex(value);
   }
@@ -105,7 +105,7 @@ export class IdentifierInstance {
       .toString(16)
       .padStart(8, '0');
     value += (time % 1000).toString(16).padStart(4, '0');
-    while (value.length < 16) value += ((Math.random() * 16) || 0).toString(16);
+    while (value.length < 16) value += (Math.random() * 16 || 0).toString(16);
 
     return this.fromHex(value);
   }
