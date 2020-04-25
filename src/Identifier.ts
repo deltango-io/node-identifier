@@ -37,13 +37,13 @@ export class Identifier {
     }
 
     fromHex(hex: string): this {
-        if (hex.length % 2) hex = '0' + hex;
         this.buffer = Buffer.from(hex, 'hex');
         return this.trimBuffer();
     }
 
     public toHex(minLength?: number) {
-        return this.buffer.toString('hex').padStart(minLength || this.minLength, '0');
+        let hex = this.buffer.toString('hex');
+        return hex.padEnd(minLength || this.minLength, '0');
     }
 
     fromUUID(uuid: string): this {
@@ -51,7 +51,7 @@ export class Identifier {
     }
 
     toUUID(): string {
-        const hex = this.toHex().padStart(32, '0');
+        const hex = this.toHex().padEnd(32, '0');
         const sections: string[] = [];
         sections.push(hex.substr(0, 8));
         sections.push(hex.substr(8, 4));
@@ -91,35 +91,21 @@ export class Identifier {
     }
 
     generateObjectId(): this {
-        const time = new Date().getTime();
-        let value: string = '';
-
-        value += Math.floor(time / 1000)
-            .toString(16)
-            .padStart(8, '0');
-
-        value += (time % 1000).toString(16).padStart(4, '0');
-
-        while (value.length < 24)
-            value += Math.round(Math.random() * 16).toString(16);
-
-        return this.fromHex(value);
+       return this.generateHexWithTimestamp(24);
     }
 
-    generateBigInt() {
-        const time = new Date().getTime();
-        let value: string = '';
+    generateBigInt(includeMilliseconds: boolean = false) {
+        return this.generateHexWithTimestamp(16, false);
+    }
 
-        value += Math.floor(time / 1000)
-            .toString(16)
-            .padStart(8, '0');
+    generateHexWithTimestamp(length: number, includeMilliseconds: boolean = false) {
+        const time = this.getTimeAsHex(includeMilliseconds);
+        const random = this.getRandomHexString(length - time.length);
+        return this.fromHex(time + random);
+    }
 
-        value += (time % 1000).toString(16).padStart(4, '0');
-
-        while (value.length < 16)
-            value += Math.round(Math.random() * 16).toString(16);
-
-        return this.fromHex(value);
+    generateHex(length: number) {
+        return this.fromHex(this.getRandomHexString(length));
     }
 
     generateUUID(version?: 1 | 4): this {
@@ -130,6 +116,38 @@ export class Identifier {
             default:
                 return this.fromUUID(require('uuid').v4());
         }
+    }
+
+    getTimeAsHex(includeMilliseconds: boolean = true) {
+        const time = new Date().getTime();
+        const seconds = Math.floor(time / 1000).toString(16).padStart(8, '0');
+
+        if (!includeMilliseconds)
+            return seconds;
+
+        const milliseconds = (time % 1000).toString(16).padStart(4, '0');
+        return seconds + milliseconds;
+    }
+
+    getRandomHexCharacter(allowZero: boolean = true) {
+        let random: number = Math.round(Math.random() * (allowZero ? 15 : 14));
+        if (!allowZero)
+            random++;
+        return random.toString(16);
+    }
+
+    getRandomHexString(desiredLength: number) {
+        let output: string = '';
+        if (desiredLength > 0)
+            output = this.getRandomHexCharacter(false);
+
+        for (let i = 0; i < (desiredLength - 2); i++)
+            output += this.getRandomHexCharacter();
+
+        if (desiredLength > 1)
+            output += this.getRandomHexCharacter(false);
+
+        return output;
     }
 }
 
