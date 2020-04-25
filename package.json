@@ -1,0 +1,48 @@
+{
+  "name": "node-identifier",
+  "version": "0.1.0",
+  "description": " A node.js helper for object/entity identifiers",
+  "main": "lib/Identifier.js",
+  "types": "lib/Identifier.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "tslint -p tsconfig.json",
+    "prepare" : "npm run build",
+    "prepublishOnly" : "npm test && npm run lint",
+    "preversion" : "npm run lint",
+    "version" : "npm run format && git add -A src",
+    "postversion" : "git push && git push --tags"
+  },
+  "files": ["lib/**/*"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lyndonbuckley/node-identifier.git"
+  },
+  "keywords": [
+    "node",
+    "unique",
+    "identifier",
+    "id",
+    "generator"
+  ],
+  "author": "Lyndon Buckley <npm@lyndonbuckley.com>",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/lyndonbuckley/node-identifier/issues"
+  },
+  "homepage": "https://github.com/lyndonbuckley/node-identifier#readme",
+  "devDependencies": {
+    "@types/node": "^13.13.2",
+    "@types/uuid": "^7.0.3",
+    "prettier": "^2.0.5",
+    "tslint": "^6.1.1",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.8.3"
+  },
+  "dependencies": {
+    "base-x": "^3.0.8",
+    "uuid": "^7.0.3"
+  }
+}
