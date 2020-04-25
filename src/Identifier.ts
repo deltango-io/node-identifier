@@ -86,26 +86,32 @@ export class Identifier {
 
   generateObjectId(): this {
     const time = new Date().getTime();
-
     let value: string = '';
+
     value += Math.floor(time / 1000)
       .toString(16)
       .padStart(8, '0');
+
     value += (time % 1000).toString(16).padStart(4, '0');
-    while (value.length < 24) value += (Math.random() * 16 || 0).toString(16);
+
+    while (value.length < 24)
+      value += Math.round(Math.random() * 16).toString(16);
 
     return this.fromHex(value);
   }
 
   generateBigInt() {
     const time = new Date().getTime();
-
     let value: string = '';
+
     value += Math.floor(time / 1000)
       .toString(16)
       .padStart(8, '0');
+
     value += (time % 1000).toString(16).padStart(4, '0');
-    while (value.length < 16) value += (Math.random() * 16 || 0).toString(16);
+
+    while (value.length < 16)
+      value += Math.round(Math.random() * 16).toString(16);
 
     return this.fromHex(value);
   }
