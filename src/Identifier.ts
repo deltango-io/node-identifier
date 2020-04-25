@@ -15,30 +15,23 @@ export class Identifier {
     this.minLength = (opts ? opts.minLength : undefined) || 0;
   }
 
-  fromBuffer(buffer: Buffer): this {
-    this.buffer = buffer;
-    this.trimBuffer();
-    return this;
-  }
-
-  trimBuffer(): this {
-
-    if (this.buffer.length < 0 || this.buffer[0] !== 0x00)
-      return this;
-
-
-    let pos: number = 0;
-    for (let i: number = 0; i <= this.buffer.length; i++) {
-      console.log(this.buffer, i, this.buffer[i])
-      if (this.buffer[i] !== 0x00) {
-        this.buffer = this.buffer.slice(i);
-        return this;
-      }
+    fromBuffer(buffer: Buffer): this {
+        this.buffer = buffer;
+        return this.trimBuffer();
     }
 
-    this.buffer = Buffer.alloc(0);
-    return this;
-  }
+    trimBuffer(): this {
+        if (this.buffer.length < 0 || this.buffer[0] !== 0x00)
+          return this;
+
+        for (let i: number = 0; i <= this.buffer.length; i++)
+            if (this.buffer[i] !== 0x00)
+                return this.fromBuffer(this.buffer.slice(i))
+
+
+        this.buffer = Buffer.alloc(0);
+        return this;
+    }
 
   public toBuffer() {
     return this.buffer;
