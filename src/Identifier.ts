@@ -121,30 +121,30 @@ export class Identifier {
   }
 }
 
-export function identifier(opts?: IdentifierInstanceOptions): Identifier {
+export function getIdentifier(opts?: IdentifierInstanceOptions): Identifier {
   return new Identifier(opts);
 }
 
 export function getIdentifierFromString(str: string, opts?: IdentifierInstanceOptions): Identifier {
-  return identifier(opts).fromString(str);
+  return getIdentifier(opts).fromString(str);
 }
 
 export function getIdentifierFromHex(hex: string, opts?: IdentifierInstanceOptions): Identifier {
-  return identifier(opts).fromHex(hex);
+  return getIdentifier(opts).fromHex(hex);
 }
 
 export function getIdentifierFromUUID(uuid: string, opts?: IdentifierInstanceOptions): Identifier {
-  return identifier(opts).fromUUID(uuid);
+  return getIdentifier(opts).fromUUID(uuid);
 }
 
 export function generateIdentifierWithObjectId(opts?: IdentifierInstanceOptions): Identifier {
-  return identifier(opts).generateObjectId();
+  return getIdentifier(opts).generateObjectId();
 }
 
 export function generateIdentifierWithUUID(version?: 1 | 4, opts?: IdentifierInstanceOptions): Identifier {
-  return identifier(opts).generateUUID(version);
+  return getIdentifier(opts).generateUUID(version);
 }
 
 export function generateIdentifierWithBigInt(opts?: IdentifierInstanceOptions): Identifier {
-  return identifier(opts).generateBigInt();
+  return getIdentifier(opts).generateBigInt();
 }
