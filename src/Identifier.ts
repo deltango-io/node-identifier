@@ -50,8 +50,8 @@ export class Identifier {
     return this.trimBuffer();
   }
 
-  public toHex() {
-    return this.buffer.toString('hex');
+  public toHex(minLength?: number) {
+    return this.buffer.toString('hex').padStart(minLength || this.minLength, '0');
   }
 
   fromUUID(uuid: string): this {
