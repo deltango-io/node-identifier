@@ -16,14 +16,27 @@ export class Identifier {
   }
 
   fromBuffer(buffer: Buffer): this {
+    this.buffer = buffer;
+    this.trimBuffer();
+    return this;
+  }
+
+  trimBuffer(): this {
+
+    if (this.buffer.length < 0 || this.buffer[0] !== 0x00)
+      return this;
+
+
     let pos: number = 0;
-    for (let i: number = 0; i <= buffer.length; i++) {
-      if (buffer[i] !== 0x00) {
-        pos = i;
-        break;
+    for (let i: number = 0; i <= this.buffer.length; i++) {
+      console.log(this.buffer, i, this.buffer[i])
+      if (this.buffer[i] !== 0x00) {
+        this.buffer = this.buffer.slice(i);
+        return this;
       }
     }
-    this.buffer = buffer.slice(pos);
+
+    this.buffer = Buffer.alloc(0);
     return this;
   }
 
