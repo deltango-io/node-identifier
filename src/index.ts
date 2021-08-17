@@ -23,8 +23,8 @@ export class Identifier {
             value = undefined;
         }
         this.options = {
-            ...options,
             ...Identifier.defaultOptions,
+            ...options,
         };
 
         // use existing value
