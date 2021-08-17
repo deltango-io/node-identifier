@@ -19,7 +19,7 @@ export class Identifier {
         stringMode: IdentifierStringMode.Base,
         minimumLength: 0,
         hashSalt: null,
-        hashAlgorithm: 'sha1'
+        hashAlgorithm: 'sha1',
     };
 
     options: IdentifierAllOptions;
@@ -137,19 +137,13 @@ export class Identifier {
         let buffer: Buffer = this.buffer;
         if (this.options.hashSalt) {
             let salt: Buffer | string = this.options.hashSalt;
-            if (typeof salt === "string") {
+            if (typeof salt === 'string') {
                 salt = Buffer.from(salt, 'utf8');
             }
-            buffer = Buffer.concat([
-                this._value,
-                salt
-            ]);
+            buffer = Buffer.concat([this._value, salt]);
         }
 
-        const hash = crypto
-            .createHash(this.options.hashAlgorithm)
-            .update(buffer.toString())
-            .digest();
+        const hash = crypto.createHash(this.options.hashAlgorithm).update(buffer.toString()).digest();
 
         const result = this._baseX.encode(hash);
         return result;
