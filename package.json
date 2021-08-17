@@ -1,9 +1,9 @@
 {
   "name": "node-identifier",
   "version": "0.5.1",
-  "description": " A node.js helper for object/entity identifiers",
-  "main": "lib/Identifier.js",
-  "types": "lib/Identifier.d.ts",
+  "description": " A Node.js/TypeScript helper for object/entity identifiers",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
@@ -20,7 +20,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lyndonbuckley/node-identifier.git"
+    "url": "git+https://github.com/deltango-io/node-identifier.git"
   },
   "keywords": [
     "node",
@@ -32,9 +32,9 @@
   "author": "Lyndon Buckley <npm@lyndonbuckley.com>",
   "license": "GPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/lyndonbuckley/node-identifier/issues"
+    "url": "https://github.com/deltango-io/node-identifier/issues"
   },
-  "homepage": "https://github.com/lyndonbuckley/node-identifier#readme",
+  "homepage": "https://github.com/deltango-io/node-identifier#readme",
   "devDependencies": {
     "@types/node": "^13.13.2",
     "prettier": "^2.0.5",
@@ -43,6 +43,8 @@
     "typescript": "^3.8.3"
   },
   "dependencies": {
-    "base-x": "^3.0.8"
+    "@types/uuid": "^8.3.1",
+    "base-x": "^3.0.8",
+    "uuid": "^8.3.2"
   }
 }
