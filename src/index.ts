@@ -1,18 +1,28 @@
 export * from './lib';
-import { Base64, IdentifierGenerationStrategy, IdentifierOptions, IdentifierStringMode, IdentifierValue } from './lib';
+import {
+    Base64,
+    IdentifierAllOptions,
+    IdentifierGenerationStrategy,
+    IdentifierOptions,
+    IdentifierStringMode,
+    IdentifierValue,
+} from './lib';
 import { IdentifierGenerator } from './generator';
 import { BaseConverter } from 'base-x';
+import * as crypto from 'crypto';
 
 export class Identifier {
     static defaultGenerationStrategy: IdentifierGenerationStrategy = IdentifierGenerationStrategy.UUID;
 
-    static defaultOptions: IdentifierOptions = {
+    static defaultOptions: IdentifierAllOptions = {
         alphabet: Base64,
         stringMode: IdentifierStringMode.Base,
         minimumLength: 0,
+        hashSalt: null,
+        hashAlgorithm: 'sha1'
     };
 
-    options: IdentifierOptions;
+    options: IdentifierAllOptions;
 
     constructor(value: IdentifierValue, options?: IdentifierOptions);
     constructor(options?: IdentifierOptions);
@@ -121,5 +131,27 @@ export class Identifier {
         const identifier = new Identifier(options);
         identifier.hex = hex;
         return identifier;
+    }
+
+    get hash() {
+        let buffer: Buffer = this.buffer;
+        if (this.options.hashSalt) {
+            let salt: Buffer | string = this.options.hashSalt;
+            if (typeof salt === "string") {
+                salt = Buffer.from(salt, 'utf8');
+            }
+            buffer = Buffer.concat([
+                this._value,
+                salt
+            ]);
+        }
+
+        const hash = crypto
+            .createHash(this.options.hashAlgorithm)
+            .update(buffer.toString())
+            .digest();
+
+        const result = this._baseX.encode(hash);
+        return result;
     }
 }

@@ -19,10 +19,12 @@ export enum IdentifierStringMode {
     UUID = 'uuid',
 }
 
-export interface IdentifierOptions {
+export interface IdentifierAllOptions {
     alphabet: string;
     stringMode: IdentifierStringMode;
     minimumLength: number;
+    hashSalt: Buffer | string | null;
+    hashAlgorithm: string;
 }
-
+export type IdentifierOptions = Partial<IdentifierAllOptions>;
 export type IdentifierValue = Buffer | string | number;
