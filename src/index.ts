@@ -1,13 +1,13 @@
 export * from './lib';
-import { IdentifierGenerationStrategy, IdentifierOptions, IdentifierStringMode, IdentifierValue } from './lib';
+import { Base64, IdentifierGenerationStrategy, IdentifierOptions, IdentifierStringMode, IdentifierValue } from './lib';
 import { IdentifierGenerator } from './generator';
 import { BaseConverter } from 'base-x';
 
 export class Identifier {
-    static defaultGenerationStrategy: IdentifierGenerationStrategy = IdentifierGenerationStrategy.TimestampedUUID;
+    static defaultGenerationStrategy: IdentifierGenerationStrategy = IdentifierGenerationStrategy.UUID;
 
     static defaultOptions: IdentifierOptions = {
-        alphabet: 'ABCDEFGHIJKLMNOPQRSTUVWYXZabcdefghijklmnopqrstuvwxyz0123456789-_',
+        alphabet: Base64,
         stringMode: IdentifierStringMode.Base,
         minimumLength: 0,
     };
@@ -105,16 +105,6 @@ export class Identifier {
 
     static generate(strategy?: IdentifierGenerationStrategy, options?: IdentifierOptions) {
         return IdentifierGenerator(strategy || this.defaultGenerationStrategy);
-    }
-
-    static generateTimestampedUUID(options?: IdentifierOptions) {
-        return IdentifierGenerator(IdentifierGenerationStrategy.TimestampedUUID);
-    }
-    static generateRandomUUID(options?: IdentifierOptions) {
-        return IdentifierGenerator(IdentifierGenerationStrategy.RandomUUID);
-    }
-    static generateObjectId(options?: IdentifierOptions) {
-        return IdentifierGenerator(IdentifierGenerationStrategy.TimestampedUUID);
     }
 
     static fromBase(value: string, options?: IdentifierOptions) {
