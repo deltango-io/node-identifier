@@ -1,6 +1,6 @@
 {
   "name": "node-identifier",
-  "version": "0.5.1",
+  "version": "1.0.0",
   "description": " A Node.js/TypeScript helper for object/entity identifiers",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

@@ -1,62 +1,52 @@
-export * from "./lib";
-import {IdentifierGenerationStrategy, IdentifierOptions, IdentifierStringMode, IdentifierValue} from "./lib";
-import {IdentifierGenerator} from "./generator";
-import {BaseConverter} from "base-x";
+export * from './lib';
+import { IdentifierGenerationStrategy, IdentifierOptions, IdentifierStringMode, IdentifierValue } from './lib';
+import { IdentifierGenerator } from './generator';
+import { BaseConverter } from 'base-x';
 
 export class Identifier {
-
     static defaultGenerationStrategy: IdentifierGenerationStrategy = IdentifierGenerationStrategy.TimestampedUUID;
 
     static defaultOptions: IdentifierOptions = {
-        alphabet: "ABCDEFGHIJKLMNOPQRSTUVWYXZabcdefghijklmnopqrstuvwxyz0123456789-_",
+        alphabet: 'ABCDEFGHIJKLMNOPQRSTUVWYXZabcdefghijklmnopqrstuvwxyz0123456789-_',
         stringMode: IdentifierStringMode.Base,
-        minimumLength: 0
-    }
+        minimumLength: 0,
+    };
 
     options: IdentifierOptions;
 
-    constructor(value: IdentifierValue, options?: IdentifierOptions)
-    constructor(options?: IdentifierOptions)
+    constructor(value: IdentifierValue, options?: IdentifierOptions);
+    constructor(options?: IdentifierOptions);
     constructor(value?: IdentifierValue | IdentifierOptions, options?: IdentifierOptions) {
-
         // set options
-        if (typeof value === "object" && !Buffer.isBuffer(value)) {
+        if (typeof value === 'object' && !Buffer.isBuffer(value)) {
             options = value;
             value = undefined;
         }
         this.options = {
             ...options,
-            ...Identifier.defaultOptions
-        }
+            ...Identifier.defaultOptions,
+        };
 
         // use existing value
-        if (value && typeof value === "string") {
-            if (this.options.stringMode === IdentifierStringMode.UUID)
-                this.uuid = value;
-            if (this.options.stringMode === IdentifierStringMode.Base)
-                this.base = value;
-            if (this.options.stringMode === IdentifierStringMode.Hex)
-                this.hex = value;
+        if (value && typeof value === 'string') {
+            if (this.options.stringMode === IdentifierStringMode.UUID) this.uuid = value;
+            if (this.options.stringMode === IdentifierStringMode.Base) this.base = value;
+            if (this.options.stringMode === IdentifierStringMode.Hex) this.hex = value;
         }
 
-        if (value && Buffer.isBuffer(value))
-            this.buffer = value;
-
+        if (value && Buffer.isBuffer(value)) this.buffer = value;
     }
 
     private _trimBuffer(buffer: Buffer) {
         // if empty buffer return
-        if (buffer.length < 1)
-            return buffer;
+        if (buffer.length < 1) return buffer;
 
         // if first byte is non-zero return buffer
-        if (buffer[0] !== 0x00)
-            return buffer;
+        if (buffer[0] !== 0x00) return buffer;
 
         // search for first non-zero byte
         for (let i: number = 0; i <= buffer.length; i++) {
-            if (buffer[i] !== 0x00)
-                return buffer.slice(i);
+            if (buffer[i] !== 0x00) return buffer.slice(i);
         }
 
         // return empty buffer
@@ -86,7 +76,7 @@ export class Identifier {
         return this.buffer.toString('hex').padStart(this.options.minimumLength, '0');
     }
     set hex(hex: string) {
-        this.buffer = Buffer.from(hex,'hex');
+        this.buffer = Buffer.from(hex, 'hex');
     }
 
     get uuid() {
@@ -104,14 +94,11 @@ export class Identifier {
     }
 
     public toString(): string {
-        if (this.options.stringMode === IdentifierStringMode.Base)
-            return this.base;
+        if (this.options.stringMode === IdentifierStringMode.Base) return this.base;
 
-        if (this.options.stringMode === IdentifierStringMode.Hex)
-            return this.hex;
+        if (this.options.stringMode === IdentifierStringMode.Hex) return this.hex;
 
-        if (this.options.stringMode === IdentifierStringMode.UUID)
-            return this.uuid
+        if (this.options.stringMode === IdentifierStringMode.UUID) return this.uuid;
 
         return '';
     }
@@ -132,7 +119,7 @@ export class Identifier {
 
     static fromBase(value: string, options?: IdentifierOptions) {
         const identifier = new Identifier(options);
-        identifier.base = value
+        identifier.base = value;
         return identifier;
     }
     static fromUUID(uuid: string, options?: IdentifierOptions) {
@@ -145,6 +132,4 @@ export class Identifier {
         identifier.hex = hex;
         return identifier;
     }
-
 }
-

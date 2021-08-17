@@ -1,16 +1,12 @@
-import {IdentifierOptions, IdentifierGenerationStrategy} from "./lib";
-import {v1, v4} from "uuid";
-import {Identifier} from "./index";
+import { IdentifierOptions, IdentifierGenerationStrategy } from './lib';
+import { v1, v4 } from 'uuid';
+import { Identifier } from './index';
 import * as crypto from 'crypto';
 
 export const IdentifierGenerator = (strategy: IdentifierGenerationStrategy, options?: IdentifierOptions) => {
+    if (strategy === IdentifierGenerationStrategy.RandomUUID) return Identifier.fromUUID(v4(), options);
 
-    if (strategy === IdentifierGenerationStrategy.RandomUUID)
-        return Identifier.fromUUID(v4(), options);
-
-    if (strategy === IdentifierGenerationStrategy.TimestampedUUID)
-        return Identifier.fromUUID(v1(), options);
-
+    if (strategy === IdentifierGenerationStrategy.TimestampedUUID) return Identifier.fromUUID(v1(), options);
 
     if (strategy === IdentifierGenerationStrategy.ObjectId) {
         const time = new Date().getTime();
@@ -23,4 +19,4 @@ export const IdentifierGenerator = (strategy: IdentifierGenerationStrategy, opti
         const buffer = Buffer.concat([timestamp, random]);
         return new Identifier(buffer, options);
     }
-}
+};
